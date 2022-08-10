@@ -1,0 +1,20 @@
+server:
+  port: 11201
+spring:
+  application:
+    name: aop-mybatis
+  cloud:
+    inetutils:
+      ignored-interfaces: #忽略网卡，这样做的目的是防止服务器有多个网卡，导致了在注册服务时导致ip 地址不准确的问题
+         - eth0
+         - eth1
+         - eth2
+         - eth3
+         - lo
+
+#注册中心信息
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.10.6.93:8761/eureka/
+    eureka-server-total-connections-per-host: 500

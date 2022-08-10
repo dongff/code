@@ -1,0 +1,37 @@
+spring:
+  jackson:
+    #序列化
+    serialization:
+      #格式化输出
+      indent_output: true
+      #忽略无法转换的对象
+      fail_on_empty_beans: false
+    #反序列化
+    deserialization:
+      #允许对象忽略json中不存在的属性
+#      fail_on_unknow_properties: false
+
+    parser:
+      #允许出现特殊字符和转义符
+      allow_unquoted_control_chars: true
+      #允许出现单引号
+      allow_single_quotes: true
+      #日期格式化
+    date-format: yyyy-MM-dd HH:mm:ss
+
+    #设置空如何序列化
+    default-property-inclusion: non_empty
+
+  jpa:
+    hibernate:
+       ddl-auto: none
+    show-sql: false
+     ###测试
+  datasource:
+    url: jdbc:mysql://10.10.6.188:3306/test?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: zjs
+    password: Az.123456
+    driverClassName: com.mysql.jdbc.Driver
+mybatis-plus:
+  # 配置类型别名所对应的包
+  type-aliases-package: cn.com.model
