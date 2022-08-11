@@ -4,6 +4,7 @@ import cn.com.model.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,7 +19,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerExceptionAdvice {
 
     @ExceptionHandler({BindException.class})
-    public ResultVo MethodArgumentNotValidExceptionHandler(BindException e) {
+    public ResultVo handleMethodArgumentNotValidExceptionHandler(BindException e) {
+        // 从异常对象中拿到ObjectError对象
+        ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
+        return ResultVo.validateError(objectError.getDefaultMessage());
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResultVo handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         // 从异常对象中拿到ObjectError对象
         ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
         return ResultVo.validateError(objectError.getDefaultMessage());

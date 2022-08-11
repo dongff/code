@@ -41,6 +41,8 @@ public class AspectConfig {
             log.info("{} {}接口返回{},总体耗时 {}", uuid, pjp.getSignature().getName(), proceed, System.currentTimeMillis() - start);
             if (proceed == null) {
                 return ResultVo.successNull();
+            }else if(!Object.class.isAssignableFrom(ResultVo.class)){
+                return ResultVo.success(proceed);
             }
 
             return proceed;

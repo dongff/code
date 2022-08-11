@@ -8,11 +8,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author: dongff
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @modified By:
  */
 @RestController
+
 public class MybitsController {
 
     @Autowired
@@ -35,7 +37,7 @@ public class MybitsController {
     }
 
     @PostMapping(value = "/findByVo", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object findByVo(@Validated @RequestBody ProductInfoVo vo) {
+    public Object findByVo(@Valid @RequestBody ProductInfoVo vo) {
 
         ProductInfo productInfo = new ProductInfo();
         BeanUtils.copyProperties(vo, productInfo);
