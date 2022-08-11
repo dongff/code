@@ -2,6 +2,7 @@ package cn.com.timeTest;
 
 
 import org.apache.commons.lang.time.StopWatch;
+import org.junit.Test;
 
 /**
  * @author: dongff
@@ -9,9 +10,11 @@ import org.apache.commons.lang.time.StopWatch;
  * @date: Created in 2022-08-10 16:15
  * @modified By:
  */
+
 public class Time {
 
-    public static void springTimeTest(String[] args) throws InterruptedException {
+    @Test
+    public void springTimeTest() throws InterruptedException {
         org.springframework.util.StopWatch stopWatch = new org.springframework.util.StopWatch();
 
         // 任务一模拟休眠3秒钟
@@ -49,7 +52,8 @@ public class Time {
     }
 
 
-    public static void apacheTimeTest(String[] args) throws InterruptedException {
+    @Test
+    public  void apacheTimeTest() throws InterruptedException {
         //创建后立即start，常用
        // StopWatch watch = StopWatch.createStarted();
 
