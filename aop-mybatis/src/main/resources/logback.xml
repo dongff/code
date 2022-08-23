@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- <property file="G:/card1/config/logback.properties" /> -->
+
+    <property name="LOG_HOME" value="E:\\TESTLOG\\logs" />
+
+    <jmxConfigurator/>
+    <!--把日志添加到控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 字符串 System.out 或者 System.err ，默认 System.out -->
+        <Target>System.out</Target>
+        <!-- 对记录事件进行格式化 -->
+        <encoder>
+            <pattern>%d [%t] %p %logger - %m%n</pattern>
+        </encoder>
+        <!-- ? -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 临界过滤 打印大于等于临界级别的日志 -->
+            <level>DEBUG</level><!--  -->
+        </filter>
+    </appender>
+
+    <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
+    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/info/mss-info.log</File>
+        <encoder>
+            <pattern>%d [%t] %p %logger{90};Line:%L - %m%n</pattern><!-- 对记录事件进行格式化 -->
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/info/mss%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <!-- 过滤器 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 具体值过滤器，当日志级别等于设置值时，过滤器返回ACCEPT（接受）；不等于设置值时返回 DENY（拒绝）-->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/error/mss-error.log</File>
+        <encoder>
+            <pattern>%d [%t] %p %logger{90};Line:%L - %m%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/error/mss%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="info"/>
+        <appender-ref ref="error"/>
+    </root>
+</configuration>

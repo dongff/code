@@ -1,0 +1,14 @@
+apache:
+  rocketmq:
+    #MQ测试服务器地址
+    namesrvAddr: 10.10.6.71:9876;10.10.6.72:9876
+    # 生产者
+    producer:
+      producerGroup: producer111111
+      # 消费者
+    consumer:
+      pushConsumer: pushConsumer111111
+    #主题名称
+    Topic: Topic
+    #标签（子主题）名称
+    Tag: Tag

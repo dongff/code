@@ -1,0 +1,18 @@
+ url: jdbc:mysql://10.10.6.188:3306/mysql?characterEncoding=utf8&useSSL=false&serverTimezone=CTT
+    username: zjs
+    password: Az.123456
+
+#spring:
+#  datasource:
+#    url: jdbc:sqlserver://10.10.127.32:1533;DatabaseName=IMS_EDI_WaybillV2
+#    username: IMS_EDI_WaybillV2-1.0
+#    password: ptdM06=pjSI-2EDI_WaybillV2-20141015
+#    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    max-active: 50
+#    max-idle: 60
+#    min-idle: 20
+#    initial-size: 6
+#    validation-query: select 1
+#    test-on-borrow: false
+#    test-on-return: false
+#    test-while-idle: true
