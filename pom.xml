@@ -25,6 +25,7 @@
     <modules>
         <module>aop-mybatis</module>
         <module>annotation-aop-sign</module>
+        <module>multithreading-lock</module>
     </modules>
 
     <dependencies>
