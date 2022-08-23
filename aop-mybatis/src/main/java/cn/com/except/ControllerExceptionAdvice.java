@@ -33,9 +33,9 @@ public class ControllerExceptionAdvice {
     }
 
     @ExceptionHandler(APIException.class)
-    public ResultVo APIExceptionHandler(APIException e) {
+    public ResultVo aPIExceptionHandler(APIException e) {
         log.error(e.getMessage(), e);
-        return new ResultVo(e.getCode(), e.getMsg(), e.getMessage());
+        return new ResultVo<String>(e.getCode(), e.getMsg(), e.getMessage());
     }
 
 }
