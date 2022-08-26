@@ -52,7 +52,7 @@ public class MybitsController {
      */
     @Retryable(value = RestClientException.class,maxAttempts = 3,backoff = @Backoff(delay = 2000,multiplier = 2))
     @PostMapping(value = "/findByVo", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object findByVo(@Valid @RequestBody ProductInfoVo vo) {
+    public Object findByVo( @Valid @RequestBody ProductInfoVo vo) {
 
         ProductInfo productInfo = new ProductInfo();
         BeanUtils.copyProperties(vo, productInfo);

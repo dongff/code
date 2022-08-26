@@ -7,12 +7,23 @@ package cm.com.designpattern;
  * @modified By:
  */
 public class Singleton {
-    // 添加 volatile 关键字 避免指令重排
-    public volatile static Singleton singleton;
 
     public Singleton() {
     }
 
+    //饿汉单例
+    private static Singleton singleton2 = new Singleton();
+
+    public static Singleton getSingleton2() {
+        return singleton2;
+    }
+
+
+    /**
+     * 双重检验懒汉单例
+     */
+    // 添加 volatile 关键字 避免指令重排
+    public volatile static Singleton singleton;
 
     /**
      * 双重检验首先判断实例是否为空，
