@@ -1,4 +1,4 @@
-package cm.com.thread;
+package cn.com.thread;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.junit.Test;

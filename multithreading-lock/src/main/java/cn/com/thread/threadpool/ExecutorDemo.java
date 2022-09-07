@@ -1,4 +1,4 @@
-package cm.com.thread.threadpool;
+package cn.com.thread.threadpool;
 
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,8 +21,8 @@ public class ExecutorDemo {
     @Test
     public  void aa() throws  java.lang.InterruptedException,java.util.concurrent.ExecutionException{
         //引入自己定义的线程池类
-      //  ExecutorService poolExecutor = new MyThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, QUEUE);
-        ExecutorService poolExecutor = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, QUEUE);
+        ExecutorService poolExecutor = new MyThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, QUEUE);
+       // ExecutorService poolExecutor = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, QUEUE);
 
         //log.info("监控queue 队列是否为空，{}"+QUEUE.isEmpty());
 

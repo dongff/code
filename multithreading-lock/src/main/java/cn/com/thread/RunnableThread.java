@@ -1,4 +1,4 @@
-package cm.com.thread;
+package cn.com.thread;
 
 /**
  * @author: dongff

@@ -1,4 +1,4 @@
-package cm.com.designpattern;
+package cn.com.designpattern;
 
 /**
  * @author: dongff

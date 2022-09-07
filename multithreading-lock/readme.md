@@ -3,12 +3,6 @@
   
 -多线程
 多线程的四种实现方式
-陈皮话梅糖。
-于 2021-09-23 15:23:37 发布 492
-收藏
-文章标签： java 多线程
-版权
-
 1.继承Thread类，重写run方法
 2.实现Runnable接口，重写run方法
 3.通过Callable和ExecutorService创建线程
@@ -17,7 +11,6 @@
 前面两种可以归结为一类：无返回值（通过重写run方法，run方式的返回值是void，所以没有办法返回结果）
 后面两种可以归结成一类：有返回值，通过Callable接口，就要实现call方法，这个方法的返回值是Object，
 所以返回的结果可以放在Object对象中
-
 
 Executors类：提供了一系列工厂方法用于创建线程池，返回的线程池都实现了ExecutorService接口。
 
@@ -39,3 +32,79 @@ Thread其实本身就是实现了接口 Runnable的一个类;Thread类也是Runn
 实际开发中我们通常采用Runnable接口来实现多线程。实现Runnable接口比继承Thread类有如下好处： 
 1. 避免继承的局限，一个类可以继承多个接口，但是类只能继承一个类。 
 2. Runnable接口实现的线程便于资源共享。而通过Thread类实现，各自线程的资源是独立的，不方便共享。 
+
+
+-volatile
+  
+  
+synchronized和Lock的区别 总结
+     synchronized是Java内置的一个关键字，Lock是是一个Java接口
+     synchronized无法判断获取锁的状态，而lock锁可以判断是否获取到了锁
+     synchronized回自动释放锁，而lock必须手动释放锁。如果不释放就会变成死锁
+     synchronized 线程1（获得锁，阻塞）线程2（傻傻地等待），lock就不一定会等待
+     synchronized 可重入锁，不可以中断的，非公平。lock锁 可重入锁，可以判断锁，公平不公平自己可以设置
+     synchronized适合锁少量的代码同步问题 Lock适合锁大量的同步代码 
+  
+-synchronized
+ Synchronized 是Java 并发编程中很重要的关键字，另外一个很重要的是 volatile。Syncronized 的目的是一次只允许一个线程进入由他修饰的代码段，从而允许他们进行自我保护。
+ Synchronized 很像生活中的锁例子，进入由Synchronized 保护的代码区首先需要获取 Synchronized 这把锁，其他线程想要执行必须进行等待。Synchronized 锁住的代码区域执行完成后需要把锁归还，也就是释放锁，这样才能够让其他线程使用。
+ 它提供了⼀种独占的加锁⽅式。Synchronized的获取和释放锁由JVM实现，⽤户不需要显示的释放锁，⾮常⽅便。然⽽synchronized也有⼀定的局限性：
+     当线程尝试获取锁的时候，如果获取不到锁会⼀直阻塞。属于是一种悲观锁。
+     如果获取锁的线程进⼊休眠或者阻塞，除⾮当前线程异常，否则其他线程尝试获取锁必须⼀直等待。
+ synchronized可以锁代码块、方法和对象。
+     方法声明时使用，放在范围操作符之后,返回类型声明之前。即一次只能有一个线程进入该方法，其他线程要想在此时调用该方法，只能排队等候。当作用于静态方法时，锁住的是Class实例，又因为Class的相关数据存储在永久带PermGen（jdk1.8 则是 metaspace），永久带是全局共享的，因此静态方法锁相当于类的一个全局锁，会锁所有调用该方法的线程；
+ 
+ private int number;
+ public synchronized void numIncrease(){
+   number++;
+ }
+ 
+     你也可以在某个代码块上使用 Synchronized 关键字，表示只能有一个线程进入某个代码段。
+ public void numDecrease(Object num){
+   synchronized (num){
+     number++;
+   }
+ }
+     synchronized后面括号里是一对象，锁住的是所有以该对象为锁的代码块，此时线程获得的是对象锁。
+ public void test() {
+   synchronized (this) {
+     // ...
+   }
+ }
+
+
+-lock
+Lock 是 Java并发编程中很重要的一个(Lock interface)接口，它要比 synchronized 关键字更能直译"锁"的概念，Lock需要手动加锁和手动解锁，一般通过 lock.lock() 方法来进行加锁， 通过 lock.unlock() 方法进行解锁。Lock 还有更强大的功能，例如，它的 tryLock 方法可以非阻塞方式去拿锁。
+
+Lock接⼝⽐同步⽅法和同步块提供了更具扩展性的锁操作。他们允许更灵活的结构，可以具有完全不同的性质，并且可以⽀持多个相关类的条件对象。
+它的优势有：
+
+    可以使锁更公平
+    可以使线程在等待锁的时候响应中断
+    可以让线程尝试获取锁，并在⽆法获取锁的时候⽴即返回或者等待⼀段时间，不会造成死锁。
+    可以在不同的范围，以不同的顺序获取和释放锁
+与 Lock 关联密切的锁有 ReentrantLock 和 ReadWriteLock。
+ReetrantLock 实现了Lock接口，它是一个可重入锁，内部定义了公平锁与非公平锁。
+
+    可重⼊锁是指同⼀个线程可以多次获取同⼀把锁。ReentrantLock和synchronized都是可重⼊锁。
+
+    可中断锁是指线程尝试获取锁的过程中，是否可以响应中断。synchronized是不可中断锁，⽽ReentrantLock则提供了中断功能。
+
+    公平锁是指多个线程同时尝试获取同⼀把锁时，获取锁的顺序按照线程达到的顺序。
+
+    ⾮公平锁则允许线程“插队”。synchronized是⾮公平锁，⽽ReentrantLock的默认实现是⾮公平锁，但是也可以设置为公平锁。
+
+    ReentrantLock它是JDK 1.5之后提供的API层⾯的互斥锁，需要lock()和unlock()⽅法配合try/finally语句块来完成。
+
+    等待可中断避免，出现死锁的情况（如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false）
+
+    公平锁与⾮公平锁多个线程等待同⼀个锁时，必须按照申请锁的时间顺序获得锁，Synchronized锁⾮公平锁，
+
+    ReentrantLock默认的构造函数是创建的⾮公平锁，可以通过参数true设为公平锁，但公平锁表现的性能不是很好。
+
+ReadWriteLock 一个用来获取读锁，一个用来获取写锁。也就是说将文件的读写操作分开，分成2个锁来分配给线程，从而使得多个线程可以同时进行读操作。ReentrantReadWirteLock实现了ReadWirteLock接口，并未实现Lock接口。
+
+
+
+
+- 异步Async

@@ -46,6 +46,17 @@ public class MybitsController {
 
 
     /**
+     * (1)value：指定发生的异常进行重试
+     * (2)include：和value一样，默认空，当exclude也为空时，所有异常都重试
+     * (3)exclude：指定异常不重试，默认空，当include也为空时，所有异常都重试
+     * (4)maxAttemps：重试次数，默认3
+     * (5)backoff：重试补偿机制，默认没有
+     *
+     *@Backoff 注解 重试补偿策略:
+     * (1)不设置参数时，默认使用FixedBackOffPolicy（指定等待时间），重试等待1000ms
+     * (2)设置delay，使用FixedBackOffPolicy（指定等待设置delay和maxDealy时，重试等待在这两个值之间均态分布）
+     * (3)设置delay、maxDealy、multiplier，使用 ExponentialBackOffPolicy（指数级重试间隔的实现），multiplier即指定延迟倍数，比如delay=5000L，multiplier=2,则第一次重试为5秒，第二次为10秒，第三次为20秒
+     *
      * delay间隔重试时间
      * @param vo
      * @return

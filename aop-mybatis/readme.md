@@ -5,10 +5,14 @@
     @Validated 抛出异常{BindException.class} 可用在类和方法上
     @RestControllerAdvice+ @ExceptionHandler捕捉抛出的异常类
      ControllerResponseAdvice类判断返回值类型，可用AspectConfig代替。
- - 计时工具类 Time
- 
+
+ - spring-retry重试机制
+    有2种形式，第一种是@Retryable注解，第二种是定义RetryTemplate
+     @Retryable(value = RestClientException.class,maxAttempts = 3,backoff = @Backoff(delay = 2000,multiplier = 2))
+     定义RetryTemplate方法 ，TestBeanProviper类定义， @Qualifier("simpleRetryTemplate")调用方法
+  
+ - 计时工具类 Time   
  - 统一返回 使用 ResultVo<T>泛型 ResultCode枚举统一定义返回格式
  - 日志收集filebeat
- - 积累的工具类
- 
+ - 积累的工具类utils
  
