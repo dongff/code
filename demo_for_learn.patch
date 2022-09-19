@@ -1,0 +1,1305 @@
+Index: RocketMq/src/main/java/apache/rocketmq/producer/生产者单向发送消息.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/生产者单向发送消息.java	(date 1663550623248)
++++ RocketMq/src/main/java/apache/rocketmq/producer/生产者单向发送消息.java	(date 1663550623248)
+@@ -0,0 +1,34 @@
++package apache.rocketmq.producer;
++
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.common.message.Message;
++import org.apache.rocketmq.remoting.common.RemotingHelper;
++
++/**
++ * @author: dongff
++ * @description: 没有返回值，也没有回调。就是只管把消息发出去就行了。
++ * @date: Created in 2022-09-19 9:20
++ * @modified By:
++ */
++public class 生产者单向发送消息 {
++    public static void main(String[] args) throws Exception{
++        // 实例化消息生产者Producer
++        DefaultMQProducer producer = new DefaultMQProducer("myConsumer");
++        // 设置NameServer的地址
++        producer.setNamesrvAddr("192.168.148.133:9876");
++        // 启动Producer实例
++        producer.start();
++        for (int i = 0; i < 1; i++) {
++            // 创建消息，并指定Topic，Tag和消息体
++            Message msg = new Message("TopicTest" /* Topic */,
++                    "TagA" /* Tag */,
++                    ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
++            );
++            // 发送单向消息，没有任何返回结果
++            producer.sendOneway(msg);
++        }
++        // 如果不再发送消息，关闭Producer实例。这里会把消费者组删除掉
++        producer.shutdown();
++    }
++
++}
+Index: multithreading-lock/src/main/java/cn/com/lock/AtomicTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- multithreading-lock/src/main/java/cn/com/lock/AtomicTest.java	(revision f6fad82f9f1f4f4a82c8df6b6a181b35de1bbc95)
++++ multithreading-lock/src/main/java/cn/com/lock/AtomicTest.java	(date 1662518219259)
+@@ -1,5 +1,7 @@
+ package cn.com.lock;
+ 
++import org.junit.Test;
++
+ import java.util.concurrent.atomic.AtomicInteger;
+ import java.util.concurrent.atomic.LongAdder;
+ 
+@@ -9,13 +11,27 @@
+  * @date: Created in 2022-09-05 14:12
+  * @modified By:
+  */
++
+ public class AtomicTest {
+ 
+     private AtomicInteger data = new AtomicInteger(0);
+ 
++    String s ="q";
++
++
+     LongAdder datal=new LongAdder();
+ 
+-    public void increment(){
++    @Test
++    public void increment() throws Exception{
+         data.incrementAndGet();
++
++
++        StringBuilder sbd=  new StringBuilder();
++        sbd.append("ee");
++
++        StringBuffer abf =new StringBuffer();
++        abf.append("xx");
+     }
++
++
+ }
+Index: RocketMq/readme.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/readme.md	(date 1663555987751)
++++ RocketMq/readme.md	(date 1663555987751)
+@@ -0,0 +1,21 @@
++官网地址 https://rocketmq.apache.org/docs/
++https://github.com/apache/rocketmq
++
++   消息发送者
++   
++     创建消息生产者producer，并指定生产者组名
++     指定Nameserver地址
++     启动producer
++     创建消息对象，指定主题Topic、Tag和消息体
++     发送消息
++     关闭生产者producer
++
++   消息消费者
++   
++     创建消费者Consumer，指定消费者组名
++     指定Nameserver地址
++     订阅主题Topic和Tag
++     设置回调函数，处理消息
++     启动消费者consumer
++
++    
+\ No newline at end of file
+Index: multithreading-lock/readme.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- multithreading-lock/readme.md	(revision f6fad82f9f1f4f4a82c8df6b6a181b35de1bbc95)
++++ multithreading-lock/readme.md	(date 1662600478757)
+@@ -3,7 +3,17 @@
+   
+ -多线程
+ 多线程的四种实现方式
+-1.继承Thread类，重写run方法
++1.继承Thread类，重写run方法 
++    新建状态:使用 new 关键字和 Thread 类或其子类建立一个线程对象后，该线程对象就处于新建状态。它保持这个状态直到程序 start() 这个线程
++    就绪状态:当线程对象调用了start()方法之后，该线程就进入就绪状态。就绪状态的线程处于就绪队列中，要等待JVM里线程调度器的调度。
++    运行状态:如果就绪状态的线程获取 CPU 资源，就可以执行 run()，此时线程便处于运行状态。处于运行状态的线程最为复杂，它可以变为阻塞状态、就绪状态和死亡状态。
++    阻塞状态:如果一个线程执行了sleep（睡眠）、suspend（挂起）等方法，失去所占用资源之后，该线程就从运行状态进入阻塞状态。
++            在睡眠时间已到或获得设备资源后可以重新进入就绪状态。可以分为三种：
++         
++           等待阻塞：运行状态中的线程执行 wait() 方法，使线程进入到等待阻塞状态。
++           同步阻塞：线程在获取 synchronized 同步锁失败(因为同步锁被其他线程占用)。
++           其他阻塞：通过调用线程的 sleep() 或 join() 发出了 I/O 请求时，线程就会进入到阻塞状态。当sleep() 状态超时，join() 等待线程终止或超时，或者 I/O 处理完毕，线程重新转入就绪状态。
++   死亡状态: 一个运行状态的线程完成任务或者其他终止条件发生时，该线程就切换到终止状态。
+ 2.实现Runnable接口，重写run方法
+ 3.通过Callable和ExecutorService创建线程
+ 4.通过线程池创建线程
+@@ -35,7 +45,10 @@
+ 
+ 
+ -volatile
+-  
++  volatile主要作用是保证可见性以及有序性。不负责解决原子性问题！
++  也就是说，volatile主要解决的是一个线程修改变量值之后，其他线程立马可以读到最新的值，是解决这个问题的，也就是可见性！
++  但是如果是多个线程同时修改一个变量的值，那还是可能出现多线程并发的安全问题，导致数据值修改错乱，volatile是不负责解决这个问题的，也就是不负责解决原子性问题！
++  原子性问题，得依赖synchronized、ReentrantLock等加锁机制来解决。
+   
+ synchronized和Lock的区别 总结
+      synchronized是Java内置的一个关键字，Lock是是一个Java接口
+@@ -74,36 +87,33 @@
+ 
+ 
+ -lock
+-Lock 是 Java并发编程中很重要的一个(Lock interface)接口，它要比 synchronized 关键字更能直译"锁"的概念，Lock需要手动加锁和手动解锁，一般通过 lock.lock() 方法来进行加锁， 通过 lock.unlock() 方法进行解锁。Lock 还有更强大的功能，例如，它的 tryLock 方法可以非阻塞方式去拿锁。
++Lock 是 Java并发编程中很重要的一个(Lock interface)接口，它要比 synchronized 关键字更能直译"锁"的概念，
++Lock需要手动加锁和手动解锁，一般通过 lock.lock() 方法来进行加锁， 通过 lock.unlock() 方法进行解锁。
++Lock 还有更强大的功能，例如，它的 tryLock 方法可以非阻塞方式去拿锁。
+ 
+-Lock接⼝⽐同步⽅法和同步块提供了更具扩展性的锁操作。他们允许更灵活的结构，可以具有完全不同的性质，并且可以⽀持多个相关类的条件对象。
++Lock接⼝⽐同步⽅法和同步块提供了更具扩展性的锁操作。他们允许更灵活的结构，可以具有完全不同的性质，
++并且可以⽀持多个相关类的条件对象。
++
+ 它的优势有：
+-
+     可以使锁更公平
+     可以使线程在等待锁的时候响应中断
+     可以让线程尝试获取锁，并在⽆法获取锁的时候⽴即返回或者等待⼀段时间，不会造成死锁。
+     可以在不同的范围，以不同的顺序获取和释放锁
++    
+ 与 Lock 关联密切的锁有 ReentrantLock 和 ReadWriteLock。
+ ReetrantLock 实现了Lock接口，它是一个可重入锁，内部定义了公平锁与非公平锁。
+-
+-    可重⼊锁是指同⼀个线程可以多次获取同⼀把锁。ReentrantLock和synchronized都是可重⼊锁。
+-
+-    可中断锁是指线程尝试获取锁的过程中，是否可以响应中断。synchronized是不可中断锁，⽽ReentrantLock则提供了中断功能。
+-
+-    公平锁是指多个线程同时尝试获取同⼀把锁时，获取锁的顺序按照线程达到的顺序。
+-
+-    ⾮公平锁则允许线程“插队”。synchronized是⾮公平锁，⽽ReentrantLock的默认实现是⾮公平锁，但是也可以设置为公平锁。
+-
+-    ReentrantLock它是JDK 1.5之后提供的API层⾯的互斥锁，需要lock()和unlock()⽅法配合try/finally语句块来完成。
+-
+-    等待可中断避免，出现死锁的情况（如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false）
+-
+-    公平锁与⾮公平锁多个线程等待同⼀个锁时，必须按照申请锁的时间顺序获得锁，Synchronized锁⾮公平锁，
+-
+-    ReentrantLock默认的构造函数是创建的⾮公平锁，可以通过参数true设为公平锁，但公平锁表现的性能不是很好。
++   可重⼊锁是指同⼀个线程可以多次获取同⼀把锁。ReentrantLock和synchronized都是可重⼊锁。
++   可中断锁是指线程尝试获取锁的过程中，是否可以响应中断。synchronized是不可中断锁，⽽ReentrantLock则提供了中断功能。
++   公平锁是指多个线程同时尝试获取同⼀把锁时，获取锁的顺序按照线程达到的顺序。
++   ⾮公平锁则允许线程“插队”。synchronized是⾮公平锁，⽽ReentrantLock的默认实现是⾮公平锁，但是也可以设置为公平锁。
++   ReentrantLock它是JDK 1.5之后提供的API层⾯的互斥锁，需要lock()和unlock()⽅法配合try/finally语句块来完成。
++   等待可中断避免，出现死锁的情况（如果别的线程正持有锁，会等待参数给定的时间，在等待的过程中，如果获取了锁定，就返回true，如果等待超时，返回false）
++   公平锁与⾮公平锁多个线程等待同⼀个锁时，必须按照申请锁的时间顺序获得锁，Synchronized锁⾮公平锁，
++   ReentrantLock默认的构造函数是创建的⾮公平锁，可以通过参数true设为公平锁，但公平锁表现的性能不是很好。
+ 
+-ReadWriteLock 一个用来获取读锁，一个用来获取写锁。也就是说将文件的读写操作分开，分成2个锁来分配给线程，从而使得多个线程可以同时进行读操作。ReentrantReadWirteLock实现了ReadWirteLock接口，并未实现Lock接口。
+-
++ReadWriteLock 一个用来获取读锁，一个用来获取写锁。
++也就是说将文件的读写操作分开，分成2个锁来分配给线程，从而使得多个线程可以同时进行读操作。
++ReentrantReadWirteLock实现了ReadWirteLock接口，并未实现Lock接口。
+ 
+ 
+ 
+Index: RocketMq/src/main/java/apache/rocketmq/producer/生产者发送同步消息.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/生产者发送同步消息.java	(date 1663550633752)
++++ RocketMq/src/main/java/apache/rocketmq/producer/生产者发送同步消息.java	(date 1663550633752)
+@@ -0,0 +1,37 @@
++package apache.rocketmq.producer;
++
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.common.message.Message;
++import org.apache.rocketmq.remoting.common.RemotingHelper;
++
++/**
++ * @author: dongff
++ * @description: 同步消息存在返回值，可以获取发送结果
++ * @date: Created in 2022-09-19 9:23
++ * @modified By:
++ */
++public class 生产者发送同步消息 {
++    public static void main(String[] args) throws Exception {
++        // 实例化消息生产者Producer
++        DefaultMQProducer producer = new DefaultMQProducer("myProducer");
++        // 设置NameServer的地址
++        producer.setNamesrvAddr("192.168.148.133:9876");
++        // 启动Producer实例
++        producer.start();
++        for (int i = 0; i < 100; i++) {
++            // 创建消息，并指定Topic，Tag和消息体
++            Message msg = new Message("TopicTest2" /* Topic */,
++                    "TagA" /* Tag */,
++                    ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
++            );
++            // 发送消息到一个Broker
++            SendResult sendResult = producer.send(msg);
++            // 通过sendResult返回消息是否成功送达
++            System.out.printf("%s%n", sendResult);
++        }
++        // 如果不再发送消息，关闭Producer实例。
++        producer.shutdown();
++    }
++
++}
+Index: multithreading-lock/src/main/java/cn/com/thread/ThreadTest1.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- multithreading-lock/src/main/java/cn/com/thread/ThreadTest1.java	(date 1662685045365)
++++ multithreading-lock/src/main/java/cn/com/thread/ThreadTest1.java	(date 1662685045365)
+@@ -0,0 +1,59 @@
++package cn.com.thread;
++
++import org.springframework.boot.test.context.SpringBootTest;
++
++import java.util.ArrayList;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++import java.util.concurrent.Future;
++import java.util.concurrent.TimeUnit;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-09 8:55
++ * @modified By:
++ */
++@SpringBootTest
++public class ThreadTest1 {
++
++   // @Test
++    public static void main(String[] args) throws Exception{
++        ExecutorService executorService = Executors.newCachedThreadPool();
++        ArrayList<Future<String>> futureArrayList = new ArrayList<>();
++        System.out.println("公司让你通知大家聚餐 你开车去接人");
++        Future<String> future10 = executorService.submit(() -> {
++            System.out.println("总裁：我在家上大号 我最近拉肚子比较慢 要蹲1个小时才能出来 你等会来接我吧");
++            TimeUnit.SECONDS.sleep(10);
++            System.out.println("总裁：1小时了 我上完大号了。你来接吧");
++            return "总裁上完大号了";
++
++        });
++        futureArrayList.add(future10);
++        Future<String> future3 = executorService.submit(() -> {
++            System.out.println("研发：我在家上大号 我比较快 要蹲3分钟就可以出来 你等会来接我吧");
++            TimeUnit.SECONDS.sleep(3);
++            System.out.println("研发：3分钟 我上完大号了。你来接吧");
++            return "研发上完大号了";
++        });
++        futureArrayList.add(future3);
++        Future<String> future6 = executorService.submit(() -> {
++            System.out.println("中层管理：我在家上大号  要蹲10分钟就可以出来 你等会来接我吧");
++            TimeUnit.SECONDS.sleep(6);
++            System.out.println("中层管理：10分钟 我上完大号了。你来接吧");
++            return "中层管理上完大号了";
++        });
++        futureArrayList.add(future6);
++        TimeUnit.SECONDS.sleep(1);
++        System.out.println("都通知完了,等着接吧。");
++        try {
++            for (Future<String> future : futureArrayList) {
++                String returnStr = future.get();
++                System.out.println(returnStr + "，你去接他");
++            }
++            Thread.currentThread().join();
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
++    }
++}
+Index: RocketMq/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/pom.xml	(date 1663550274286)
++++ RocketMq/pom.xml	(date 1663550274286)
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <parent>
++        <artifactId>demo</artifactId>
++        <groupId>com.cn</groupId>
++        <version>1.0.0</version>
++    </parent>
++    <modelVersion>4.0.0</modelVersion>
++
++    <artifactId>RocketMq</artifactId>
++
++
++    <dependencies>
++        <dependency>
++            <groupId>org.apache.rocketmq</groupId>
++            <artifactId>rocketmq-client</artifactId>
++            <version>4.7.1</version>
++        </dependency>
++    </dependencies>
++
++</project>
+\ No newline at end of file
+Index: RocketMq/src/main/java/apache/rocketmq/consumer/过滤消息_标签过滤器.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/consumer/过滤消息_标签过滤器.java	(date 1663553914532)
++++ RocketMq/src/main/java/apache/rocketmq/consumer/过滤消息_标签过滤器.java	(date 1663553914532)
+@@ -0,0 +1,41 @@
++package apache.rocketmq.consumer;
++
++import lombok.extern.slf4j.Slf4j;
++import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
++import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
++import org.apache.rocketmq.client.exception.MQClientException;
++import org.apache.rocketmq.common.message.MessageExt;
++import org.springframework.stereotype.Component;
++
++import java.io.IOException;
++import java.util.List;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 10:15
++ * @modified By:
++ */
++@Component
++@Slf4j
++public class 过滤消息_标签过滤器 {
++
++    public static void main(String[] args) throws InterruptedException, MQClientException, IOException {
++        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name");
++        consumer.setNamesrvAddr("172.255.155.14");
++        //只监听标签为TagA和TagC
++        consumer.subscribe("FilterTopic", "TagA || TagC");
++        consumer.registerMessageListener(new MessageListenerConcurrently() {
++            @Override
++            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
++                log.info("接收到的消息：{}", msgs.toString());
++                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
++            }
++        });
++        consumer.start();
++        System.out.printf("Consumer Started.%n");
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/consumer/过滤消息_sql过滤器.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/consumer/过滤消息_sql过滤器.java	(date 1663553842344)
++++ RocketMq/src/main/java/apache/rocketmq/consumer/过滤消息_sql过滤器.java	(date 1663553842344)
+@@ -0,0 +1,37 @@
++package apache.rocketmq.consumer;
++
++import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
++import org.apache.rocketmq.client.consumer.MessageSelector;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
++import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
++import org.apache.rocketmq.common.message.MessageExt;
++
++import java.util.List;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 10:15
++ * @modified By:
++ */
++public class 过滤消息_sql过滤器 {
++
++    public static void main(String[] args) throws Exception {
++        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("sql_filter_topic");
++        consumer.setNamesrvAddr("458.125.225.244");
++
++        consumer.subscribe("FilterTopic",
++                MessageSelector.bySql("(TAGS is not null and TAGS in('TagB'))" + "and (a is not null and a > 10)"));
++        consumer.registerMessageListener(new MessageListenerConcurrently() {
++            @Override
++            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
++                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
++                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
++            }
++        });
++        consumer.start();
++        System.out.printf("Consumer Started.%n");
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/ACL控制.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/ACL控制.java	(date 1663554471790)
++++ RocketMq/src/main/java/apache/rocketmq/ACL控制.java	(date 1663554471790)
+@@ -0,0 +1,52 @@
++package apache.rocketmq;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 10:26
++ * @modified By:
++ */
++public class ACL控制 {
++    /**
++     *
++
++    权限控制（ACL）主要为RocketMQ提供Topic资源级别的用户访问控制。
++     用户在使用RocketMQ权限控制时，可以在Client客户端通过 RPCHook注入AccessKey和SecretKey签名；
++     同时，将对应的权限控制属性（包括Topic访问权限、IP白名单和AccessKey和SecretKey签名等）
++     设置在$ROCKETMQ_HOME/conf/plain_acl.yml的配置文件中。Broker端对AccessKey所拥有的权限进行校验，校验不过，抛出异常；
++
++    broker.conf增加​​aclEnable=true​​
++
++    plan_acl.ym修改
++
++#全局白名单，不受ACL控制
++#通常需要将主从架构中的所有节点加进来
++    globalWhiteRemoteAddresses:
++            - 10.10.103.*
++            - 192.168.0.*
++    accounts:
++            #第一个账户
++- accessKey: RocketMQ
++    secretKey: 12345678
++    whiteRemoteAddress:
++    admin: false
++    defaultTopicPerm: DENY#默认Topic访问策略是拒绝
++    defaultGroupPerm: SUB#默认Group访问策略是只允许订阅
++    topicPerms:
++            - topicA=DENY#topicA拒绝
++  - topicB=PUB|SUB#topicB允许发布和订阅消息
++  - topicC=SUB#topicC只允许订阅
++    groupPerms:
++            # the group should convert to retry topic
++  - groupA=DENY
++  - groupB=PUB|SUB
++  - groupC=SUB
++#第二个账户，只要是来自192.168.1.*的IP，就可以访问所有资源
++- accessKey: rocketmq2
++    secretKey: 12345678
++    whiteRemoteAddress: 192.168.1.*
++            # if it is admin, it could access all resources
++    admin: true
++  */
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/producer/事务生产者.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/事务生产者.java	(date 1663554371002)
++++ RocketMq/src/main/java/apache/rocketmq/producer/事务生产者.java	(date 1663554371002)
+@@ -0,0 +1,111 @@
++package apache.rocketmq.producer;
++
++import lombok.extern.slf4j.Slf4j;
++import org.apache.rocketmq.client.exception.MQClientException;
++import org.apache.rocketmq.client.producer.LocalTransactionState;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.client.producer.TransactionListener;
++import org.apache.rocketmq.client.producer.TransactionMQProducer;
++import org.apache.rocketmq.common.message.Message;
++import org.apache.rocketmq.common.message.MessageExt;
++import org.apache.rocketmq.remoting.common.RemotingHelper;
++import org.junit.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.stereotype.Component;
++
++import java.io.UnsupportedEncodingException;
++import java.util.concurrent.ConcurrentHashMap;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++import java.util.concurrent.atomic.AtomicInteger;
++
++/**
++ * @author: dongff
++ * @description: 这个事务消息是RocketMQ提供的一个非常有特色的功能。
++ * 事务消息是在分布式系统中保证最终一致性的两阶段提交的消息实现。
++ * 他可以保证本地事务执行与消息发送两个操作的原子性，也就是这两个操作一起成功或者一起失败。
++ *
++ * 事务消息只保证消息发送者的本地事务与发消息这两个操作的原子性，
++ * 因此，事务消息的示例只涉及到消息发送者，对于消息消费者来说，并没有什么特别的
++ *
++ * 事务限制：
++ *
++ *
++ *     事务消息不支持延迟消息和批量消息
++ *     为了避免单个消息被检查太多次而导致半队列消息累积，我们默认将单个消息的检查次数限制为15 次，但是用户可以通过 Broker 配置文件的 transactionCheckMax 参数来修改此限制
++ *     事务消息将在 Broker 配置文件中的参数 transactionMsgTimeout 这样的特定时间长度之后被检查。当发送事务消息时，用户还可以通过设置用户属性 CHECK_IMMUNITY_TIME_IN_SECONDS 来改变这个限制，该参数优先于 transactionMsgTimeout 参数。
++ *     事务性消息可能不止一次被检查或消费。
++ *     提交给用户的目标主题消息可能会失败，目前这依日志的记录而定。
++ *     事务消息的生产者 ID 不能与其他类型消息的生产者 ID 共享
++
++ * @date: Created in 2022-09-19 10:19
++ * @modified By:
++ */
++@Component
++@Slf4j
++@SpringBootTest
++public class 事务生产者 {
++
++    @Test
++    public  void main1() throws Exception {
++        TransactionMQProducer producer = new TransactionMQProducer("transaction_producer_group");
++        //线程池
++        ExecutorService executorService =  Executors.newFixedThreadPool(5);
++        //事务监听器
++        TransactionListener transactionListener = new TransactionListenerImpl();
++        producer.setExecutorService(executorService);
++        producer.setTransactionListener(transactionListener);
++        producer.setNamesrvAddr("172.115.247.4:554");
++        String[] tags = new String[]{"TagA", "TagB", "TagC", "TagD", "TagE"};
++        for (int i = 0; i < 10; i++) {
++            try {
++                Message msg =
++                        new Message("TopicTest1234", tags[i % tags.length], "KEY" + i,
++                                ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
++                SendResult sendResult = producer.sendMessageInTransaction(msg, null);
++                System.out.printf("%s%n", sendResult);
++                Thread.sleep(10);
++            } catch (MQClientException | UnsupportedEncodingException e) {
++                e.printStackTrace();
++            }
++        }
++        for (int i = 0; i < 100000; i++) {
++            Thread.sleep(1000);
++        }
++        producer.shutdown();
++        producer.start();
++    }
++
++
++    public class TransactionListenerImpl implements TransactionListener {
++        private AtomicInteger transactionIndex = new AtomicInteger(0);
++        private ConcurrentHashMap<String, Integer> localTrans = new ConcurrentHashMap<>();
++
++        @Override
++        public LocalTransactionState executeLocalTransaction(Message message, Object o) {
++            int value = transactionIndex.getAndIncrement();
++            int status = value % 3;
++            localTrans.put(message.getTransactionId(), status);
++            return LocalTransactionState.UNKNOW;
++        }
++
++        @Override
++        public LocalTransactionState checkLocalTransaction(MessageExt messageExt) {
++            Integer status = localTrans.get(messageExt.getTransactionId());
++            if (null != status) {
++                switch (status) {
++                    case 0:
++                        return LocalTransactionState.UNKNOW;
++                    case 1:
++                        return LocalTransactionState.COMMIT_MESSAGE;
++                    case 2:
++                        return LocalTransactionState.ROLLBACK_MESSAGE;
++                    default:
++                        return LocalTransactionState.COMMIT_MESSAGE;
++                }
++            }
++            return LocalTransactionState.COMMIT_MESSAGE;
++        }
++
++    }
++}
+Index: RocketMq/src/main/java/apache/Rocketmq.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/Rocketmq.java	(date 1663550552013)
++++ RocketMq/src/main/java/apache/Rocketmq.java	(date 1663550552013)
+@@ -0,0 +1,19 @@
++package apache;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 9:18
++ * @modified By:
++ */
++public class Rocketmq {
++
++
++
++/**
++ * 单向消息
++ */
++
++
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/producer/批量消息_批量消息迭代器.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/批量消息_批量消息迭代器.java	(date 1663553270556)
++++ RocketMq/src/main/java/apache/rocketmq/producer/批量消息_批量消息迭代器.java	(date 1663553270556)
+@@ -0,0 +1,111 @@
++package apache.rocketmq.producer;
++
++import com.alibaba.fastjson.JSON;
++import lombok.extern.slf4j.Slf4j;
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.common.message.Message;
++import org.junit.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.stereotype.Component;
++
++import java.util.ArrayList;
++import java.util.Iterator;
++import java.util.List;
++import java.util.Map;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 9:58
++ * @modified By:
++ */
++@Slf4j
++@Component
++@SpringBootTest
++public class 批量消息_批量消息迭代器 {
++
++    @Test
++    public  void test() throws Exception {
++        try {
++            //初始化一个生成者组
++            DefaultMQProducer producer = new DefaultMQProducer("split_producer_group");
++            //设置name server地址
++            producer.setNamesrvAddr("192.168.106.133:9876");
++            producer.start();
++            String topic = "splitBatchTest";
++            List<Message> messages = new ArrayList<>();
++            messages.add(new Message(topic, "Tag", "OrderID001", "Hello world 0".getBytes()));
++            messages.add(new Message(topic, "Tag", "OrderID002", "Hello world 1".getBytes()));
++            messages.add(new Message(topic, "Tag", "OrderID003", "Hello world 2".getBytes()));
++            //使用自定迭代一，每次发送一定数量数据
++            ListSplitter splitter = new ListSplitter(messages);
++            while (splitter.hasNext()) {
++                List<Message> listItem = splitter.next();
++                //发送批量消息
++                SendResult send = producer.send(listItem);
++                log.info("发送消息结果：{}", JSON.toJSONString(send));
++            }
++            producer.shutdown();
++        } catch (Exception e) {
++            log.error("产生了异常", e);
++        }
++    }
++
++
++    public class ListSplitter implements Iterator<List<Message>> {
++        private int sizeLimit = 1000 * 1000;
++        private final List<Message> messages;
++        private int currIndex;
++
++        public ListSplitter(List<Message> messages) {
++            this.messages = messages;
++        }
++
++        @Override
++        public boolean hasNext() {
++            return currIndex < messages.size();
++        }
++
++        @Override
++        public List<Message> next() {
++            int nextIndex = currIndex;
++            int totalSize = 0;
++            for (; nextIndex < messages.size(); nextIndex++) {
++                Message message = messages.get(nextIndex);
++                int tmpSize = message.getTopic().length() + message.getBody().length;
++                Map<String, String> properties = message.getProperties();
++                for (Map.Entry<String, String> entry : properties.entrySet()) {
++                    tmpSize += entry.getKey().length() + entry.getValue().length();
++                }
++                tmpSize = tmpSize + 20;
++                //for log overhead
++                if (tmpSize > sizeLimit) {
++                    //it is unexpected that single message exceeds the sizeLimit
++                    // here just let it go, otherwise it will block the splitting process
++                    if (nextIndex - currIndex == 0) {
++                        // if the next sublist has no element, add this one and then break, otherwise just break
++                        nextIndex++;
++                    }
++                    break;
++                }
++                if (tmpSize + totalSize > sizeLimit) {
++                    break;
++                } else {
++                    totalSize += tmpSize;
++                }
++            }
++            List<Message> subList = messages.subList(currIndex, nextIndex);
++            currIndex = nextIndex;
++            return subList;
++        }
++
++        @Override
++        public void remove() {
++            throw new UnsupportedOperationException("Not allowed to remove");
++        }
++    }
++}
++
++
++
+Index: RocketMq/src/main/java/apache/rocketmq/producer/批量消息_简单批量消息生产者.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/批量消息_简单批量消息生产者.java	(date 1663552815053)
++++ RocketMq/src/main/java/apache/rocketmq/producer/批量消息_简单批量消息生产者.java	(date 1663552815053)
+@@ -0,0 +1,42 @@
++package apache.rocketmq.producer;
++
++import com.alibaba.fastjson.JSON;
++import lombok.extern.slf4j.Slf4j;
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.common.message.Message;
++
++import java.util.ArrayList;
++import java.util.List;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 9:56
++ * @modified By:
++ */
++@Slf4j
++public class 批量消息_简单批量消息生产者 {
++
++    public static void main(String[] args) throws Exception {
++        try { //初始化一个生成者组
++            DefaultMQProducer producer = new DefaultMQProducer("batch_producer_group");
++            // 设置name server地址
++            producer.setNamesrvAddr("192.168.106.133:9876");
++            producer.start();
++            String topic = "BatchTest";
++            List<Message> messages = new ArrayList<>();
++            messages.add(new Message(topic, "Tag", "OrderID001", "Hello world 0".getBytes()));
++            messages.add(new Message(topic, "Tag", "OrderID002", "Hello world 1".getBytes()));
++            messages.add(new Message(topic, "Tag", "OrderID003", "Hello world 2".getBytes()));
++            //发送批量消息
++            SendResult send = producer.send(messages);
++            log.info("发送消息结果：{}", JSON.toJSONString(send));
++            producer.shutdown();
++
++        } catch (Exception e) {
++            log.error("产生了异常", e);
++        }
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/producer/过滤生产者.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/过滤生产者.java	(date 1663553701827)
++++ RocketMq/src/main/java/apache/rocketmq/producer/过滤生产者.java	(date 1663553701827)
+@@ -0,0 +1,55 @@
++package apache.rocketmq.producer;
++
++import com.alibaba.fastjson.JSON;
++import lombok.extern.slf4j.Slf4j;
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.common.message.Message;
++import org.apache.rocketmq.remoting.common.RemotingHelper;
++import org.springframework.stereotype.Component;
++
++/**
++ * @author: dongff
++ * @description: 在大多数情况下，可以使用Message的Tag属性来简单快速的过滤信息。这种方式有一个很大的限制，就是一个消息只能有一个TAG，可以使用SQL表达式来对消息进行过滤。
++ *
++ * SQL92语法：
++ *
++ *
++ *     数值比较，比如：>，>=，<，<=，BETWEEN，=
++ *     字符比较，比如：=，<>，IN；
++ *     IS NULL** 或者 IS NOT NULL；
++ *     逻辑符号 AND****，OR，NOT*；
++ *     常量支持类型为：
++ *
++ *         数值，比如：123，3.1415；
++ *         字符，比如：'abc'，必须用单引号包裹起来；
++ *         NULL，特殊的常量
++ *         布尔值，TRUE 或 FALSE
++ *
++ *
++ * @date: Created in 2022-09-19 10:11
++ * @modified By:
++ */
++@Component
++@Slf4j
++public class 过滤生产者 {
++
++    public static void main(String[] args) throws Exception {
++        DefaultMQProducer producer = new DefaultMQProducer("filter_producer");
++        producer.setNamesrvAddr("192.168.106.133:9876");
++        producer.start();
++        //消息发送到不同的tag上
++        String[] tags = new String[]{"TagA", "TagB", "TagC"};
++        for (int i = 0; i < 60; i++) {
++            Message msg = new Message("FilterTopic",
++                    tags[i % tags.length],
++                    "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
++            //给消息增加用户附加属性，可以用于sql过滤器
++            msg.putUserProperty("a", String.valueOf(i));
++            SendResult sendResult = producer.send(msg);
++            log.info("发送结果：{}", JSON.toJSONString(sendResult));
++        }
++        producer.shutdown();
++    }
++
++}
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision f6fad82f9f1f4f4a82c8df6b6a181b35de1bbc95)
++++ pom.xml	(date 1663550105379)
+@@ -27,6 +27,7 @@
+         <module>annotation-aop-sign</module>
+         <module>multithreading-lock</module>
+         <module>Encryption-Decryption</module>
++        <module>RocketMq</module>
+     </modules>
+ 
+     <dependencies>
+Index: RocketMq/src/main/java/apache/rocketmq/consumer/批量消息消费者.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/consumer/批量消息消费者.java	(date 1663553418263)
++++ RocketMq/src/main/java/apache/rocketmq/consumer/批量消息消费者.java	(date 1663553418263)
+@@ -0,0 +1,41 @@
++package apache.rocketmq.consumer;
++
++import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
++import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
++import org.apache.rocketmq.client.exception.MQClientException;
++import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
++import org.apache.rocketmq.common.message.MessageExt;
++
++import java.util.List;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 10:08
++ * @modified By:
++ */
++public class 批量消息消费者 {
++
++    public static void main(String[] args) throws InterruptedException, MQClientException {
++        //初始化一个消费者组
++        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("batch_consumer_group");
++        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
++        //设置name server地址
++        consumer.setNamesrvAddr("192.168.148.133:9876");
++        //订阅主题
++        consumer.subscribe("BatchTest", "*");
++        consumer.registerMessageListener(new MessageListenerConcurrently() {
++            @Override
++            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
++                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
++                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
++            }
++        });
++        consumer.start();
++        System.out.println("消费者启动完毕");
++    }
++
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/consumer/顺序消费消息.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/consumer/顺序消费消息.java	(date 1663553270590)
++++ RocketMq/src/main/java/apache/rocketmq/consumer/顺序消费消息.java	(date 1663553270590)
+@@ -0,0 +1,55 @@
++package apache.rocketmq.consumer;
++
++import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
++import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
++import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
++import org.apache.rocketmq.client.consumer.listener.MessageListenerOrderly;
++import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
++import org.apache.rocketmq.common.message.MessageExt;
++import org.springframework.stereotype.Component;
++
++import java.util.List;
++import java.util.Random;
++import java.util.concurrent.TimeUnit;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 9:50
++ * @modified By:
++ */
++@Component
++public class 顺序消费消息 {
++
++    public static void main(String[] args) throws Exception {
++        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("myProducer");
++        consumer.setNamesrvAddr("192.168.148.133:9876");
++        /**
++         * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
++         * 如果非第一次启动，那么按照上次消费的位置继续消费
++         */
++        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
++        consumer.subscribe("TopicOrder", "TagA || TagC || TagD");
++        consumer.registerMessageListener(new MessageListenerOrderly() {
++            Random random = new Random();
++            @Override
++            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
++                context.setAutoCommit(true);
++                for (MessageExt msg : msgs) {
++                    // 可以看到每个queue有唯一的consume线程来消费, 订单对每个queue(分区)有序
++                    System.out.println("consumeThread=" + Thread.currentThread().getName() + "queueId=" + msg.getQueueId() + ", content:" + new String(msg.getBody()));
++                }
++                try {
++                    //模拟业务逻辑处理中...
++                    TimeUnit.SECONDS.sleep(random.nextInt(10));
++                } catch (Exception e) {
++                    e.printStackTrace();
++                }
++                return ConsumeOrderlyStatus.SUCCESS;
++            }
++        });
++        consumer.start();
++        System.out.println("Consumer Started.");
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/producer/顺序生产消息.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/顺序生产消息.java	(date 1663550716901)
++++ RocketMq/src/main/java/apache/rocketmq/producer/顺序生产消息.java	(date 1663550716901)
+@@ -0,0 +1,125 @@
++package apache.rocketmq.producer;
++
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.client.producer.MessageQueueSelector;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.common.message.Message;
++import org.apache.rocketmq.common.message.MessageQueue;
++
++import java.text.SimpleDateFormat;
++import java.util.ArrayList;
++import java.util.Date;
++import java.util.List;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 9:24
++ * @modified By:
++ */
++public class 顺序生产消息 {
++
++    public static void main(String[] args) throws Exception {
++        DefaultMQProducer producer = new DefaultMQProducer("myConsumer");
++        producer.setNamesrvAddr("192.168.148.133:9876");
++        producer.start();
++        String[] tags = new String[]{"TagA", "TagC", "TagD"};
++        // 订单列表
++        List<OrderStep> orderList = new 顺序生产消息().buildOrders();
++        Date date = new Date();
++        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
++        String dateStr = sdf.format(date);
++        for (int i = 0; i < 10; i++) {
++            // 加个时间前缀
++            String body = dateStr + " Hello RocketMQ " + orderList.get(i);
++            Message msg = new Message("TopicOrder", tags[i % tags.length], "KEY" + i, body.getBytes());
++            SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
++                @Override
++                public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
++                    Long id = (Long) arg;  //根据订单id选择发送queue
++                    long index = id % mqs.size();
++                    return mqs.get((int) index);
++                }
++            }, orderList.get(i).getOrderId());//订单id
++            System.out.println(String.format("SendResult status:%s, queueId:%d, body:%s",
++                    sendResult.getSendStatus(),
++                    sendResult.getMessageQueue().getQueueId(),
++                    body));
++        }
++        producer.shutdown();
++    }
++    /**
++     * 订单的步骤
++     */
++    private static class OrderStep {
++        private long orderId;
++        private String desc;
++        public long getOrderId() {
++            return orderId;
++        }
++        public void setOrderId(long orderId) {
++            this.orderId = orderId;
++        }
++        public String getDesc() {
++            return desc;
++        }
++        public void setDesc(String desc) {
++            this.desc = desc;
++        }
++        @Override
++        public String toString() {
++            return "OrderStep{" +
++                    "orderId=" + orderId +
++                    ", desc='" + desc + '\'' +
++                    '}';
++        }
++    }
++    /**
++     * 生成模拟订单数据
++     */
++    private List<OrderStep> buildOrders() {
++        List<OrderStep> orderList = new ArrayList<OrderStep>();
++        OrderStep orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111039L);
++        orderDemo.setDesc("创建");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111065L);
++        orderDemo.setDesc("创建");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111039L);
++        orderDemo.setDesc("付款");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103117235L);
++        orderDemo.setDesc("创建");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111065L);
++        orderDemo.setDesc("付款");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103117235L);
++        orderDemo.setDesc("付款");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111065L);
++        orderDemo.setDesc("完成");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111039L);
++        orderDemo.setDesc("推送");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103117235L);
++        orderDemo.setDesc("完成");
++        orderList.add(orderDemo);
++        orderDemo = new OrderStep();
++        orderDemo.setOrderId(15103111039L);
++        orderDemo.setDesc("完成");
++        orderList.add(orderDemo);
++        return orderList;
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/producer/生产者发送异步消息.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/生产者发送异步消息.java	(date 1663550679112)
++++ RocketMq/src/main/java/apache/rocketmq/producer/生产者发送异步消息.java	(date 1663550679112)
+@@ -0,0 +1,59 @@
++package apache.rocketmq.producer;
++
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.client.producer.SendCallback;
++import org.apache.rocketmq.client.producer.SendResult;
++import org.apache.rocketmq.common.CountDownLatch2;
++import org.apache.rocketmq.common.message.Message;
++import org.apache.rocketmq.remoting.common.RemotingHelper;
++
++import java.util.concurrent.TimeUnit;
++
++/**
++ * @author: dongff
++ * @description: 异步消息存在消息回调，在回调中处理响应结果
++ * @date: Created in 2022-09-19 9:23
++ * @modified By:
++ */
++public class 生产者发送异步消息 {
++    public static void main(String[] args) throws Exception {
++        // 实例化消息生产者Producer
++        DefaultMQProducer producer = new DefaultMQProducer("myProducer");
++        // 设置NameServer的地址
++        producer.setNamesrvAddr("192.168.106.133:9876");
++        // 启动Producer实例
++        producer.start();
++        producer.setRetryTimesWhenSendAsyncFailed(0);
++        int messageCount = 100;
++        // 根据消息数量实例化倒计时计算器
++        final CountDownLatch2 countDownLatch = new CountDownLatch2(messageCount);
++        for (int i = 0; i < messageCount; i++) {
++            final int index = i;
++            // 创建消息，并指定Topic，Tag和消息体
++            Message msg = new Message("TopicTest",
++                    "TagA",
++                    "OrderID188",
++                    "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
++            // SendCallback接收异步返回结果的回调
++            producer.send(msg, new SendCallback() {
++                @Override
++                public void onSuccess(SendResult sendResult) {
++                    countDownLatch.countDown();
++                    System.out.printf("%-10d OK %s %n", index,
++                            sendResult.getMsgId());
++                }
++                @Override
++                public void onException(Throwable e) {
++                    countDownLatch.countDown();
++                    System.out.printf("%-10d Exception %s %n", index, e);
++                    e.printStackTrace();
++                }
++            });
++        }
++        // 等待5s
++        countDownLatch.await(5, TimeUnit.SECONDS);
++        // 如果不再发送消息，关闭Producer实例。
++        producer.shutdown();
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/producer/延时消息生产者.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/producer/延时消息生产者.java	(date 1663553270642)
++++ RocketMq/src/main/java/apache/rocketmq/producer/延时消息生产者.java	(date 1663553270642)
+@@ -0,0 +1,35 @@
++package apache.rocketmq.producer;
++
++import org.apache.rocketmq.client.producer.DefaultMQProducer;
++import org.apache.rocketmq.common.message.Message;
++import org.springframework.stereotype.Component;
++
++/**
++ * @author: dongff
++ * @description:
++ * @date: Created in 2022-09-19 9:55
++ * @modified By:
++ */
++
++@Component
++public class 延时消息生产者 {
++
++    public static void main(String[] args) throws Exception {
++        // 实例化一个生产者来产生延时消息
++        DefaultMQProducer producer = new DefaultMQProducer("ExampleProducerGroup");
++        // 启动生产者
++        producer.setNamesrvAddr("192.168.106.133:9876");
++        producer.start();
++        int totalMessagesToSend = 100;
++        for (int i = 0; i < totalMessagesToSend; i++) {
++            Message message = new Message("TestTopic", ("Hello scheduled message " + i).getBytes());
++            // 设置延时等级3,这个消息将在10s之后发送(现在只支持固定的几个时间,详看delayTimeLevel)
++            message.setDelayTimeLevel(3);
++            // 发送消息
++            producer.send(message);
++        }
++        // 关闭生产者
++        producer.shutdown();
++    }
++
++}
+Index: RocketMq/src/main/java/apache/rocketmq/consumer/广播消息消费者.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- RocketMq/src/main/java/apache/rocketmq/consumer/广播消息消费者.java	(date 1663553270681)
++++ RocketMq/src/main/java/apache/rocketmq/consumer/广播消息消费者.java	(date 1663553270681)
+@@ -0,0 +1,42 @@
++package apache.rocketmq.consumer;
++
++import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
++import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
++import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
++import org.apache.rocketmq.common.message.MessageExt;
++import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
++import org.springframework.stereotype.Component;
++
++import java.util.List;
++
++/**
++ * @author: dongff
++ * @description: 广播消息并没有特定的消息消费者样例，这是因为这涉及到消费者的集群消费模式。
++ * 在集群状态(MessageModel.CLUSTERING)下，每一条消息只会被同一个消费者组中的一个实例消费到(这跟kafka和rabbitMQ的集群模式是一样的)。
++ * 而广播模式则是把消息发给了所有订阅了对应主题的消费者，而不管消费者是不是同一个消费者组。
++ * @date: Created in 2022-09-19 9:51
++ * @modified By:
++ */
++@Component
++public class 广播消息消费者 {
++
++    public static void main(String[] args) throws Exception {
++        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("broad_consumer");
++        //设置消息模式为广播模式，广播模式是所有的消费者都可以接收到消息
++        consumer.setMessageModel(MessageModel.BROADCASTING);
++        //订阅主题
++        consumer.subscribe("TopicTest", "TagA || TagC || TagD");
++        consumer.registerMessageListener(new MessageListenerConcurrently() {
++            @Override
++            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
++                                                            ConsumeConcurrentlyContext context) {
++                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
++                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
++            }
++        });
++        consumer.start();
++        System.out.printf("Broadcast Consumer Started.%n");
++    }
++
++}
