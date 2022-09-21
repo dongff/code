@@ -51,7 +51,7 @@ public class 顺序生产消息 {
     /**
      * 订单的步骤
      */
-    private static class OrderStep {
+    public static class OrderStep {
         private long orderId;
         private String desc;
         public long getOrderId() {

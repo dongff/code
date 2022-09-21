@@ -2,7 +2,6 @@ package cn.com.utils;
 
 import org.junit.Test;
 
-import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
