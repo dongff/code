@@ -1,4 +1,4 @@
-package cn.proxy.controller;
+package cn.com.sign.proxy.controller;
 
 /**
  * @author: dongff

@@ -8,7 +8,9 @@ package com;
  */
 public class TestSynchronized {
 
-    public void sync() {
+    public  void sync() {
+
+
         synchronized (this) {
             System.out.println("sync");
         }

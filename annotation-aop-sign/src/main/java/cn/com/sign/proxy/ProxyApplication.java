@@ -1,7 +1,7 @@
-package cn.proxy;
+package cn.com.sign.proxy;
 
-import cn.proxy.controller.CglibProxyMethodInterceptor;
-import cn.proxy.controller.ThirdTestClassServiceImpl;
+import cn.com.sign.proxy.controller.CglibProxyMethodInterceptor;
+import cn.com.sign.proxy.controller.ThirdTestClassServiceImpl;
 import org.assertj.core.internal.cglib.proxy.Enhancer;
 
 /**

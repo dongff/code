@@ -1,4 +1,4 @@
-package cn.proxy.controller;
+package cn.com.sign.proxy.controller;
 
 import org.assertj.core.internal.cglib.proxy.MethodInterceptor;
 import org.assertj.core.internal.cglib.proxy.MethodProxy;

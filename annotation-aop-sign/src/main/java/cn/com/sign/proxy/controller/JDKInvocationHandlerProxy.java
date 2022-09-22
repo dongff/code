@@ -1,4 +1,4 @@
-package cn.proxy.controller;
+package cn.com.sign.proxy.controller;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -28,9 +28,9 @@ import java.lang.reflect.Proxy;
 /**
  * JDK代理
  */
-public class MainTestClassProxy implements InvocationHandler {
+public class JDKInvocationHandlerProxy implements InvocationHandler {
     private Object target;
-    public MainTestClassProxy(Object target){
+    public JDKInvocationHandlerProxy(Object target){
         this.target = target;
     }
 
