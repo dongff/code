@@ -30,7 +30,7 @@ public class 过滤消息_sql过滤器 {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
-          consumer.start();
+        consumer.start();
         System.out.printf("Consumer Started.%n");
     }
 
