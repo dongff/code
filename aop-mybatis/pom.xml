@@ -33,7 +33,7 @@
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
         </dependency>
-        <!--&lt;!&ndash;使用RetryTemplate 可能会需要这个&ndash;&gt;-->
+        <!--&lt;!&ndash;使用RetryTemplate 可能会需要这个 netflix.hystrix依赖下，不用;-->
         <!--<dependency>-->
             <!--<groupId>org.springframework</groupId>-->
             <!--<artifactId>spring-aspects</artifactId>-->
@@ -47,17 +47,13 @@
             <version>3.5.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.7.2</version>
-        </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.7.0</version>
-        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>io.springfox</groupId>-->
+            <!--<artifactId>springfox-swagger2</artifactId>-->
+            <!--<version>2.7.0</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.alibaba.rocketmq</groupId>

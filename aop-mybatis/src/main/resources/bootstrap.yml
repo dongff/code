@@ -12,6 +12,7 @@ spring:
          - eth3
          - lo
 
+
 #注册中心信息
 eureka:
   client:
