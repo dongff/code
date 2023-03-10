@@ -1,0 +1,55 @@
+spring:
+  cloud:
+    inetutils:
+      ignoredInterfaces:
+        - eth0
+        - eth1
+        - eth2
+        - eth3
+        - lo
+    config:
+      enabled: true
+      fail-fast: true
+      discovery:
+        enabled: true  #（这个值默认是false，必须设置为true）
+        service-id: dj-atliwen-edi-config
+  application:
+      #应用名称必须配置
+      name: dj-lichuang-pddstate
+#  profiles:
+#      active: zs
+##      active: cs
+
+#eureka:
+#  client:
+#    register-with-eureka: false #是否将自己注册到Eureka Server上，默认为true
+#    fetch-registry: false #是否从Eureka Server上获取注册信息，默认为true
+#注册中心信息
+eureka:
+  instance:
+#    hostname: 10.10.129.98
+    prefer-ip-address: true
+  client:
+     serviceUrl:
+#      #注册中心默认地址，默认就使用第一个如果有多个第一个不通或加载第二个，如果有区域配置可以就近原则配置
+#      #正式
+#        defaultZone: http://10.10.6.93:8761/eureka/
+#      defaultZone: http://duijiegroup:duijiegroup@10.10.129.79:8762/eureka/,http://duijiegroup:duijiegroup@10.10.129.78:8762/eureka/,http://duijiegroup:duijiegroup@10.10.129.80:8762/eureka/
+     eureka-server-total-connections-per-host: 500
+server:
+  port: 30128
+
+info:
+  contact:
+    appName: dj-lichuang-pddstate
+    author: lihcuang
+    introduce: 拼多多状态接口
+
+
+
+
+
+
+
+
+

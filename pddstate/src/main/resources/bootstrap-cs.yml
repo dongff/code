@@ -1,0 +1,72 @@
+##注册中心信息
+#eureka:
+#  instance:
+#    #本机
+#    hostname: 10.10.12.162
+#    #docker环境
+#    #hostname: 10.10.6.145
+#    #k8s环境
+#    #hostname: 10.10.6.243
+#    #显示IP
+#    #prefer-ip-address: true
+#  client:
+#    serviceUrl:
+#      #注册中心默认地址，默认就使用第一个如果有多个第一个不通或加载第二个，如果有区域配置可以就近原则配置
+#      #测试
+#      defaultZone: http://10.10.6.93:8761/eureka/
+#    eureka-server-total-connections-per-host: 500
+#
+#
+##springfox:
+##  documentation:
+##    swagger:
+##      v2:
+##        host: businesstest.zjs.com.cn:8001
+#
+#zjs:
+#  #客户标识
+#  clientFlag: Pin_DD
+#  #下单状态订阅
+#  startSubscribe:
+#    url: 10.10.6.145:8909/wccc/v1/savebatchediwccc
+#  #运单中心
+#  waybill:
+#  #运单号查询状态接口
+#    state:
+#      url: 10.10.6.246:30651/getTrajectoryByvwocode
+#    sign:
+#      url: 10.10.6.243:31668/getThirdPartySignInfo
+#
+##spring:
+##  redis:
+##    cluster:
+##      nodes: 10.10.6.154:30001,10.10.6.154:30002,10.10.6.155:30001,10.10.6.155:30002,10.10.6.156:30001,10.10.6.156:30002
+##    timeout: 1000
+##    # 数据库索引（默认为0）
+##    database: 0
+##    pool:
+##      # 连接池最大连接数（使用负值表示没有限制）
+##      max-active: 10
+##      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+##      max-wait: 100
+##      # 连接池中的最大空闲连接
+##      max-idle: 8
+##      # 连接池中的最小空闲连接
+##      min-idle: 2
+#pdd:
+##快递公司client_id
+#  client_id: ae0f5205404643b3aea31027cd65865e
+##client_secret
+#  client_secret: 09d8f9ec433b4bdba77db7439ccbe7afdf09efbd
+##拼多多的client_id
+#  from_client_id: edb65ef927c14c7bb0d4b86981de48ce
+##合作伙伴身份标识，拼多多会为每个合作伙伴分配一个ship_id
+#  ship_id: 129
+##拼多多的client_id
+#  target_client_id: edb65ef927c14c7bb0d4b86981de48ce
+#
+#  url: ark-api.pinduoduo.com/ark/router
+#
+#
+#
+#

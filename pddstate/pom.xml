@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.14.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.zjs</groupId>
+	<artifactId>dj-lichuang-pddstate</artifactId>
+	<version>0.0.7</version>
+	<name>dj-lichuang-pddstate</name>
+	<description>拼多多状态接口</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!--面向切面 AOP-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<!-- hystrix 熔断-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!--@Data get set方法-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+		</dependency>
+
+		<!--swagger2 接口页面化测试-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
+		<!--bootstrap.yml配置引用（加了这个依赖配置文件才能使用）-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+		</dependency>
+
+		<!--通过直接指定URL 的方式  将其不获取服务地址  当做一个纯粹的请求API-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
+
+		<!--@Test-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+		<!--springboot安全控件依赖-->
+		<!--控制yml配置文件中的  info信息  和安全开关 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!--宅急送 杨继承运单状态订阅-->
+		<dependency>
+			<groupId>spp</groupId>
+			<artifactId>spp-datamodel</artifactId>
+			<version>1.2.8</version>
+		</dependency>
+
+	</dependencies>
+
+	<!--bootstrap.yml配置引用（加了这个依赖配置文件才能使用）-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Edgware.SR5</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!--镜像-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<!--至少要使用1.0以后的版本 建议很实用最新的1.2.0-->
+				<version>1.2.0</version>
+				<configuration>
+					<!--用户ID-->
+					<serverId>docker</serverId>
+					<!--镜像项目目录-->
+					<registryUrl>https://hb.zjs.com.cn/edi/</registryUrl>
+					<!--公开的安装有docker的服务器，2375 端口权限开放后可以进行远程超做，用于上传jar包和Dockerfile文件-->
+					<dockerHost>http://10.10.6.50:2375</dockerHost>
+					<!--镜像名称  注意 /edi/  这个路径是 镜像目录  请设置对应的镜像目录-->
+					<!--<imageName>hb.zjs.com.cn/edi/${project.artifactId}:${project.version}</imageName>-->
+					<imageName>swr.cn-north-4.myhuaweicloud.com/zjs/${project.artifactId}:${project.version}</imageName>
+					<!--修改过时间轴为上海区域的java 基础镜像-->
+					<baseImage>hb.zjs.com.cn/base/openjdk:8u292-jdk-alpine</baseImage>
+
+					<!--当前镜像版本的描述-->
+					<maintainer>李闯 - ${project.description}</maintainer>
+					<!--<volumes>/tmp</volumes>-->
+					<!--<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>-->
+					<entryPoint>["sh","-c","exec java -jar  ${JVM_OPTS} /${project.build.finalName}.jar"]</entryPoint>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

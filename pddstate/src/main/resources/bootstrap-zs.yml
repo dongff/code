@@ -1,0 +1,30 @@
+#
+#zjs:
+#  #客户标识
+#  clientFlag: Pin_DD
+#  #下单状态订阅
+#  startSubscribe:
+#    url: business.zjs.com.cn:9200/edi/sppstate/wccc/v1/savebatchediwccc
+#  #运单中心
+#  waybill:
+#  #运单号查询状态接口
+#    state:
+#      url: ydzx.api.zjs.com.cn:8160/getWaybillstatusByVwoAndStatus
+#
+#
+#pdd:
+##快递公司client_id
+#  client_id: ae0f5205404643b3aea31027cd65865e
+##client_secret
+#  client_secret: 09d8f9ec433b4bdba77db7439ccbe7afdf09efbd
+##拼多多的client_id
+#  from_client_id: edb65ef927c14c7bb0d4b86981de48ce
+##合作伙伴身份标识，拼多多会为每个合作伙伴分配一个ship_id
+#  ship_id: 129
+##拼多多的client_id
+#  target_client_id: edb65ef927c14c7bb0d4b86981de48ce
+#
+#  url: ark-api.pinduoduo.com/ark/router
+#
+##每天早上3点触发定时器
+#timer: 0 0 3 * * ?
