@@ -2,7 +2,6 @@ package com.open.newfeature.jdk9_12;
 
 import org.junit.Test;
 
-import java.util.*;
 import java.util.stream.Collectors;
 
 public class newFeature {

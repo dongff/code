@@ -1,7 +1,5 @@
 package com.open.collection;
 
-import java.util.*;
-
 public class IteratorTest {
     public static void main(String[] args) {
         List<Integer> arrayList = new ArrayList<>();

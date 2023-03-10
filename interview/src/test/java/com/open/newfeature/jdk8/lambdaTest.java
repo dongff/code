@@ -2,8 +2,6 @@ package com.open.newfeature.jdk8;
 
 import org.junit.Test;
 
-import java.util.function.*;
-
 public class lambdaTest {
 
     /**
